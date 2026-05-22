@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/engine/include/**",
+                "${workspaceFolder}/games/triangle/src/**",
+                "${env:HOME}/vcpkg/packages/glm_x64-linux/include/**",
+                "${env:HOME}/vcpkg/packages/fmt_x64-linux/include/**",
+                "${env:HOME}/vcpkg/packages/entt_x64-linux/include/**",
+                "${env:HOME}/vcpkg/packages/shaderc_x64-linux/include/**",
+                "${env:HOME}/vcpkg/packages/vulkan-headers_x64-linux/include/**",
+                "${env:HOME}/vcpkg/packages/spirv-headers_x64-linux/include/**",
+                "${env:HOME}/.local/crab-sdl3/include/**",
+                "/tmp/vulkan-dev/usr/include/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

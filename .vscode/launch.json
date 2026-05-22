@@ -1,0 +1,75 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug TriangleGame",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/TriangleGame",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/bin",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/bin:/home/neo/.local/crab-tools/usr/lib/x86_64-linux-gnu:/home/neo/.local/crab-sdk/usr/lib/x86_64-linux-gnu"
+                },
+                {
+                    "name": "WAYLAND_DISPLAY",
+                    "value": "wayland-1"
+                },
+                {
+                    "name": "XDG_SESSION_TYPE",
+                    "value": "wayland"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": ":1"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build"
+        },
+        {
+            "name": "Run TriangleGame",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/TriangleGame",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/bin",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${workspaceFolder}/bin:/home/neo/.local/crab-tools/usr/lib/x86_64-linux-gnu:/home/neo/.local/crab-sdk/usr/lib/x86_64-linux-gnu"
+                },
+                {
+                    "name": "WAYLAND_DISPLAY",
+                    "value": "wayland-1"
+                },
+                {
+                    "name": "XDG_SESSION_TYPE",
+                    "value": "wayland"
+                },
+                {
+                    "name": "DISPLAY",
+                    "value": ":1"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build",
+            "presentation": {
+                "hidden": true
+            }
+        }
+    ]
+}

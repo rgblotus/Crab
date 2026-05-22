@@ -1,0 +1,12 @@
+{
+  "name": "crab-engine",
+  "version": "0.1.0",
+  "dependencies": [
+    "entt",
+    "glm",
+    "fmt",
+    "shaderc",
+    "vulkan-headers",
+    "vulkan-loader"
+  ]
+}

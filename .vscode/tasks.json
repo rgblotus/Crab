@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "./build.sh",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "CMake Configure (Debug)",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S", ".",
+                "-B", "build",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_TOOLCHAIN_FILE=${env:HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "-DVulkan_INCLUDE_DIR=/tmp/vulkan-dev/usr/include",
+                "-DVulkan_LIBRARY=/usr/lib/x86_64-linux-gnu/libvulkan.so",
+                "-DSDL3_DIR=${env:HOME}/.local/crab-sdl3/lib/cmake/SDL3",
+                "-DCMAKE_BUILD_RPATH=/home/neo/.local/crab-tools/usr/lib/x86_64-linux-gnu:/home/neo/.local/crab-sdk/usr/lib/x86_64-linux-gnu"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm",
+            "args": ["-rf", "build"],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
