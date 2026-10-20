@@ -1,0 +1,21 @@
+#pragma once
+
+#include <string_view>
+
+#define CRAB_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define CRAB_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define CRAB_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#define CRAB_VERSION_STRING "@PROJECT_VERSION@"
+
+namespace crab::core {
+
+inline constexpr std::string_view kEngineName = "Crab";
+inline constexpr std::string_view kEngineVersion = CRAB_VERSION_STRING;
+inline constexpr std::string_view kBuildType = "@CRAB_BUILD_TYPE@";
+inline constexpr std::string_view kCompiler = "@CRAB_COMPILER@";
+
+inline constexpr int kVersionMajor = CRAB_VERSION_MAJOR;
+inline constexpr int kVersionMinor = CRAB_VERSION_MINOR;
+inline constexpr int kVersionPatch = CRAB_VERSION_PATCH;
+
+} // namespace crab::core

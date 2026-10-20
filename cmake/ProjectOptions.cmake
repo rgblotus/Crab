@@ -1,0 +1,35 @@
+include_guard(GLOBAL)
+
+include(GNUInstallDirs)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+option(CRAB_BUILD_TESTS "Build the unit and integration tests" ON)
+option(CRAB_BUILD_EDITOR "Build the Crab editor" OFF)
+option(CRAB_ENABLE_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
+option(CRAB_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
+option(CRAB_ENABLE_TRACY "Enable Tracy profiler integration" OFF)
+option(CRAB_USE_SYSTEM_SDL3 "Use a system SDL3 package instead of FetchContent" OFF)
+option(CRAB_USE_SYSTEM_GLM "Use a system GLM package instead of FetchContent" OFF)
+option(CRAB_USE_CCACHE "Use ccache for C++ compilation when available" ON)
+
+if(CRAB_USE_CCACHE AND NOT CMAKE_CXX_COMPILER_LAUNCHER)
+  find_program(CRAB_CCACHE_PROGRAM ccache)
+  if(CRAB_CCACHE_PROGRAM)
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CRAB_CCACHE_PROGRAM}")
+  endif()
+endif()
+
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
+endif()

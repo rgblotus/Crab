@@ -1,0 +1,295 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CRAB_BUILD_TESTS": "ON",
+        "CRAB_ENABLE_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "description": "Debug build with tests and warnings as errors",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux Release",
+      "description": "Optimized build with tests and warnings as errors",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-asan",
+      "displayName": "Linux Debug + ASan/UBSan",
+      "description": "Debug build with AddressSanitizer and UndefinedBehaviorSanitizer",
+      "inherits": "linux-debug",
+      "cacheVariables": {
+        "CRAB_ENABLE_SANITIZERS": "ON"
+      }
+    },
+    {
+      "name": "linux-clang",
+      "displayName": "Linux Debug (Clang)",
+      "description": "Debug build using Clang",
+      "inherits": "linux-debug",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang"
+      }
+    },
+    {
+      "name": "linux-headless",
+      "displayName": "Linux Headless",
+      "description": "Debug build that disables SDL desktop/audio drivers and uses the dummy video driver",
+      "inherits": "linux-debug",
+      "cacheVariables": {
+        "SDL_X11": "OFF",
+        "SDL_WAYLAND": "OFF",
+        "SDL_KMSDRM": "OFF",
+        "SDL_DUMMYVIDEO": "ON",
+        "SDL_OFFSCREEN": "ON",
+        "SDL_AUDIO": "OFF",
+        "SDL_LIBUDEV": "OFF",
+        "SDL_HIDAPI": "OFF",
+        "SDL_TEST_LIBRARY": "OFF",
+        "SDL_UNIX_CONSOLE_BUILD": "ON"
+      }
+    },
+    {
+      "name": "linux-headless-asan",
+      "displayName": "Linux Headless + ASan/UBSan",
+      "description": "Headless debug build with AddressSanitizer and UndefinedBehaviorSanitizer",
+      "inherits": "linux-headless",
+      "cacheVariables": {
+        "CRAB_ENABLE_SANITIZERS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release"
+    },
+    {
+      "name": "linux-asan",
+      "configurePreset": "linux-asan"
+    },
+    {
+      "name": "linux-clang",
+      "configurePreset": "linux-clang"
+    },
+    {
+      "name": "linux-headless",
+      "configurePreset": "linux-headless"
+    },
+    {
+      "name": "linux-headless-asan",
+      "configurePreset": "linux-headless-asan"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "linux-asan",
+      "configurePreset": "linux-asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      },
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=0"
+      }
+    },
+    {
+      "name": "linux-headless",
+      "configurePreset": "linux-headless",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    },
+    {
+      "name": "linux-headless-asan",
+      "configurePreset": "linux-headless-asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      },
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=0"
+      }
+    },
+    {
+      "name": "linux-clang",
+      "configurePreset": "linux-clang",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "linux-debug",
+      "displayName": "Configure, build, and test Linux Debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-debug"
+        },
+        {
+          "type": "build",
+          "name": "linux-debug"
+        },
+        {
+          "type": "test",
+          "name": "linux-debug"
+        }
+      ]
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Configure, build, and test Linux Release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-release"
+        },
+        {
+          "type": "build",
+          "name": "linux-release"
+        },
+        {
+          "type": "test",
+          "name": "linux-release"
+        }
+      ]
+    },
+    {
+      "name": "linux-headless",
+      "displayName": "Configure, build, and test Linux Headless",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-headless"
+        },
+        {
+          "type": "build",
+          "name": "linux-headless"
+        },
+        {
+          "type": "test",
+          "name": "linux-headless"
+        }
+      ]
+    },
+    {
+      "name": "linux-headless-asan",
+      "displayName": "Configure, build, and test Linux Headless with ASan/UBSan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-headless-asan"
+        },
+        {
+          "type": "build",
+          "name": "linux-headless-asan"
+        },
+        {
+          "type": "test",
+          "name": "linux-headless-asan"
+        }
+      ]
+    },
+    {
+      "name": "linux-asan",
+      "displayName": "Configure, build, and test Linux Debug + ASan/UBSan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-asan"
+        },
+        {
+          "type": "build",
+          "name": "linux-asan"
+        },
+        {
+          "type": "test",
+          "name": "linux-asan"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang",
+      "displayName": "Configure, build, and test Linux Debug with Clang",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang"
+        }
+      ]
+    }
+  ]
+}

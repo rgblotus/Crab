@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: clang-debug
+            preset: linux-clang
+            compiler: clang++
+            cc: clang
+          - name: gcc-release
+            preset: linux-release
+            compiler: g++
+            cc: gcc
+          - name: asan-headless
+            preset: linux-headless-asan
+            compiler: clang++
+            cc: clang
+
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.compiler }}
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      # Driver/loader teardown allocations are not actionable leaks for the
+      # engine tests; keep ASan focused on memory errors in Crab.
+      ASAN_OPTIONS: detect_leaks=0
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential clang cmake git glslc ninja-build pkg-config \
+            libasound2-dev libaudio-dev libdbus-1-dev libdecor-0-dev \
+            libdrm-dev libegl1-mesa-dev libfribidi-dev libgbm-dev \
+            libgl1-mesa-dev libgles2-mesa-dev libibus-1.0-dev \
+            libjack-jackd2-dev libpipewire-0.3-dev libpulse-dev \
+            libsndio-dev libthai-dev libudev-dev liburing-dev \
+            libvulkan-dev libwayland-dev libx11-dev libxcursor-dev \
+            libxext-dev libxfixes-dev libxi-dev libxinerama-dev \
+            libxkbcommon-dev libxrandr-dev libxss-dev libxtst-dev \
+            mesa-vulkan-drivers vulkan-tools vulkan-validationlayers
+
+      - name: Select software Vulkan driver
+        run: |
+          # GitHub's hosted runners have no GPU. Prefer Mesa lavapipe for
+          # deterministic headless and offscreen RHI tests.
+          for icd in /usr/share/vulkan/icd.d/lvp_icd*.json; do
+            if [ -f "$icd" ]; then
+              echo "VK_ICD_FILENAMES=$icd" >> "$GITHUB_ENV"
+              break
+            fi
+          done
+
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ matrix.name }}
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }}
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }}
+
+      - name: Headless smoke test
+        run: ./build/${{ matrix.preset }}/bin/crab --headless --frames 5
+
+  format:
+    name: Format
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends clang-format
+
+      - name: Check formatting
+        run: ./scripts/check_format.sh

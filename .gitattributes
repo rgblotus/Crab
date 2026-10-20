@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ktx binary
+*.ktx2 binary
+*.dds binary
+*.glb binary
+*.gltf text
+*.spv binary
